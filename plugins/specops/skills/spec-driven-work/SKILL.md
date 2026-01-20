@@ -1,7 +1,7 @@
 ---
 name: Spec-Driven Work
 description: Work on projects through well-defined specs. Spec-first approach with no ambiguity.
-version: 1.2.0
+version: 1.3.0
 ---
 
 # spec-driven-work
@@ -152,11 +152,14 @@ When spec development requires research, track findings in a dedicated file.
 
 **When to use:** Any spec development that involves investigation before the spec can be written.
 
-**Setup:**
+**Before starting research:**
 1. Ask the user where to track research (or propose a location)
-2. Create `research-progress.md` before starting investigation
+2. Create the research file before starting any investigation
+3. This is blocking - do not investigate until the file exists
 
-**Update immediately after each:**
+**After each finding (not batched - immediately after each one):**
+
+Update the research file with:
 - **Finding** - Something you learned
 - **Decision** - Something that was decided
 - **Answer** - A question that got resolved
@@ -292,6 +295,16 @@ Before claiming something is done:
 - Run the verification steps from the spec
 - Check actual output matches expected
 - If spec has no verification steps, that's a gap - flag it
+
+### Step Completion Checklist
+
+Before moving to the next step, confirm:
+- [ ] Step action completed
+- [ ] All verification items from spec completed
+- [ ] Progress file updated with result and verification
+- [ ] Status marked appropriately
+
+Never proceed to the next step until all items are checked. This prevents rushing ahead and missing verification.
 
 ---
 
