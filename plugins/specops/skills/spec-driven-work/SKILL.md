@@ -1,7 +1,7 @@
 ---
 name: Spec-Driven Work
 description: Work on projects through well-defined specs. Spec-first approach with no ambiguity.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # spec-driven-work
@@ -145,6 +145,71 @@ When developing specs, actively ask:
 - "Should this be a template?"
 - "Where does this get documented?"
 - "Is there an existing spec this should reference?"
+
+### Research Tracking
+
+When spec development requires research, track findings in a dedicated file.
+
+**When to use:** Any spec development that involves investigation before the spec can be written.
+
+**Setup:**
+1. Ask the user where to track research (or propose a location)
+2. Create `research-progress.md` before starting investigation
+
+**Update immediately after each:**
+- **Finding** - Something you learned
+- **Decision** - Something that was decided
+- **Answer** - A question that got resolved
+
+**Never batch updates.** Update the file immediately after each finding, not after multiple investigations.
+
+**Research file format:**
+
+```markdown
+# Research Progress: [Project Name]
+
+**Started:** [date]
+**Status:** in-progress / complete
+
+---
+
+## Defined Terms
+
+| Term | Definition |
+|------|------------|
+| [term] | [definition] |
+
+---
+
+## Findings
+
+### Finding 1: [Title]
+**Date:** [date]
+
+[What was discovered]
+
+---
+
+## Decisions
+
+### Decision 1: [Title]
+**Date:** [date]
+
+**Decision:** [what was decided]
+**Rationale:** [why]
+
+---
+
+## Open Questions
+
+1. [Question still unanswered]
+2. ~~[Answered question]~~ **ANSWERED:** [answer or reference to finding]
+```
+
+**Rules:**
+- Update immediately, not in batches
+- Strike through answered questions, add answer reference
+- Link to research file from the final spec
 
 ---
 
