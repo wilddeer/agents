@@ -2,13 +2,17 @@
 
 Claude Code skills and agents.
 
-## Skills
+## Plugins
 
-### spec-driven-work
+### specops
 
 Work on projects through well-defined specs. Spec-first approach with no ambiguity - every process gets specced, cross-referenced, and followed.
 
-**Location:** `skills/spec-driven-work/`
+**Location:** `plugins/specops/`
+
+**Command:** `/spec-driven-work`
+
+**Skill:** `specops:spec-driven-work`
 
 ## Installation
 
@@ -16,8 +20,8 @@ Work on projects through well-defined specs. Spec-first approach with no ambigui
 # Add marketplace to Claude Code
 /plugin marketplace add wilddeer/agents
 
-# Install the skill
-/plugin install spec-driven-work@wilddeer-agents
+# Install the plugin
+/plugin install specops@wilddeer-agents
 ```
 
 ## License

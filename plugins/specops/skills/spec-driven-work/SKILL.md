@@ -1,6 +1,7 @@
 ---
+name: Spec-Driven Work
 description: Work on projects through well-defined specs. Spec-first approach with no ambiguity.
-argument-hint: Optional context about the work
+version: 1.0.0
 ---
 
 # spec-driven-work

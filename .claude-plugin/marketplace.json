@@ -5,8 +5,8 @@
   },
   "plugins": [
     {
-      "name": "spec-driven-work",
-      "source": "./plugins/spec-driven-work",
+      "name": "specops",
+      "source": "./plugins/specops",
       "description": "Work on projects through well-defined specs. Spec-first approach with no ambiguity."
     }
   ]

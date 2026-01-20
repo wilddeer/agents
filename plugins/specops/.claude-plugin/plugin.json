@@ -1,7 +1,10 @@
 {
-  "name": "spec-driven-work",
+  "name": "specops",
+  "version": "1.0.0",
   "description": "Work on projects through well-defined specs. Spec-first approach with no ambiguity.",
   "author": {
     "name": "Oleg Korsunskiy"
-  }
+  },
+  "repository": "https://github.com/wilddeer/agents",
+  "license": "MIT"
 }
