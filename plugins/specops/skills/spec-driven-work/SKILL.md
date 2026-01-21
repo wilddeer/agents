@@ -1,7 +1,7 @@
 ---
 name: Spec-Driven Work
 description: Work on projects through well-defined specs. Spec-first approach with no ambiguity.
-version: 1.3.0
+version: 1.5.0
 ---
 
 # spec-driven-work
@@ -98,6 +98,26 @@ Templates should include:
 - Example of filled-in version
 - Where the template lives (which spec doc)
 
+### 9. Log Everything (With Permission)
+
+Log what's defined, ask about the rest.
+
+**Log without asking:**
+- What the skill explicitly requires (step completion, test results, bugs, status updates)
+
+**Ask before logging:**
+- Any action, decision, or finding not explicitly required
+- Investigations, design decisions, context, side discoveries
+
+**Pattern:**
+- Do the work
+- Ask: "Should I log [this finding/decision/investigation]?"
+- If yes, log it; if no, move on
+
+**Wrong:** Assume everything should be logged and document without asking
+**Wrong:** Skip logging something potentially valuable without asking
+**Right:** "I checked for similar issues in other files and found none. Should I log this investigation?"
+
 ---
 
 ## Spec Development Mode
@@ -173,6 +193,12 @@ Update the research file with:
 
 **Started:** [date]
 **Status:** in-progress / complete
+
+---
+
+## Objective
+
+[What is being researched and why. Capture the high-level goal and the key questions that need answering before the spec can be written. This ensures research can be resumed with full context if interrupted.]
 
 ---
 
@@ -274,37 +300,113 @@ Update the progress file with:
 - Keep progress files permanently (do not delete on completion)
 - Update status field at top when execution completes or blocks
 
-### When You Hit a Gap
+### Verification Tracking
 
-Present options to the user:
+When the spec defines verification criteria (testing, review, validation), track results and issues in the progress file.
+
+**After all steps complete, add a Verification section:**
+
+```markdown
+---
+
+## Verification
+
+### [Verification Type] (per spec)
+
+**Date:** [date]
+
+| Check | Result | Notes |
+|-------|--------|-------|
+| [check from spec] | PASSED / FAILED / - | [notes, issue reference if failed] |
+
+### Issues Found
+
+#### Issue 1: [Short description]
+- **Status:** [see statuses below]
+- **Found during:** [which check]
+- **Symptom:** [what was observed]
+- **Root cause:** [why it happened - after investigation]
+- **Resolution:** [what was changed]
+- **Artifacts modified:** [if applicable]
+  - [list of files, documents, data, etc.]
+```
+
+**Issue statuses:**
+- `investigating` - Issue identified, looking into root cause
+- `resolution applied, pending verification` - Changes made, awaiting confirmation
+- `resolved` - Verified after fix (ONLY after confirmed)
+- `wont fix` - Intentional behavior or out of scope
+
+**Rules:**
+- Log issues immediately when identified (even before root cause is known)
+- Update issue status as investigation progresses
+- NEVER mark as "resolved" until verified - no inferring
+- Use "resolution applied, pending verification" after applying a fix
+- Update check results after issues are resolved and re-verified
+
+### Executing Steps Directly
+
+When executing steps directly (not via subagent):
+
+1. Invoke the `spec-step-execution` skill
+2. Execute the step following that skill
+3. Re-invoke `spec-driven-work` skill to restore orchestration context
+
+Re-invoking ensures this skill is fresh in context (not compacted) before continuing to next step.
+
+### Orchestration with Subagents
+
+Delegate step execution to `spec-step-executor` agents by default. The main process orchestrates; subagents execute.
+
+**When to execute directly (exceptions):**
+
+| Situation | Why |
+|-----------|-----|
+| Step requires user interaction mid-execution | Subagent can't interact with user |
+| High ambiguity / gaps likely | Main process handles gaps with user |
+
+**Parallel execution:**
+
+The spec MUST explicitly define what can run in parallel:
+
+```markdown
+## Execution Mode
+
+### Sequential
+Steps 1-3 must execute in order.
+
+### Parallel
+Steps 4a, 4b, 4c can run in parallel (no shared state).
+Wait for all before Step 5.
+```
+
+To launch parallel agents, use multiple Task tool calls in a single message:
 
 ```
-The spec doesn't define [X]. Options:
-1. Add definition to spec, then continue
-2. Proceed with assumption [Y] (not recommended)
-3. Skip this part for now
-
-Which approach?
+[Task: spec-step-executor for step 4a]
+[Task: spec-step-executor for step 4b]
+[Task: spec-step-executor for step 4c]
 ```
 
-Then wait for user to choose.
+**What to pass to subagents:**
+- Spec file path
+- Step number/name to execute
+- Progress file path (if exists)
+- Research file path (if exists)
 
-### Verify, Don't Assume
+**Main process responsibilities:**
+- Decide subagent vs direct execution
+- Launch subagents (parallel when spec allows)
+- Update progress file with results (single writer)
+- Handle gap responses from subagents
 
-Before claiming something is done:
-- Run the verification steps from the spec
-- Check actual output matches expected
-- If spec has no verification steps, that's a gap - flag it
+**Subagent result format:**
 
-### Step Completion Checklist
-
-Before moving to the next step, confirm:
-- [ ] Step action completed
-- [ ] All verification items from spec completed
-- [ ] Progress file updated with result and verification
-- [ ] Status marked appropriately
-
-Never proceed to the next step until all items are checked. This prevents rushing ahead and missing verification.
+| Result | Meaning | Action |
+|--------|---------|--------|
+| SUCCESS | Step completed, verification passed | Update progress file, proceed to next step |
+| FAILED | Step attempted but errored | Investigate error, retry or escalate to user |
+| GAP | Spec doesn't cover this situation | Discuss with user, update spec if needed, re-dispatch or execute directly |
 
 ---
 

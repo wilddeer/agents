@@ -1,6 +1,6 @@
 {
   "name": "specops",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Work on projects through well-defined specs. Spec-first approach with no ambiguity.",
   "author": {
     "name": "Oleg Korsunskiy"
