@@ -1,12 +1,36 @@
 # specops installer for Cursor (Windows)
 # Installs skills and agents to ~/.cursor/
+# Usage: .\install.ps1 [version]
+#   .\install.ps1         # Install latest release
+#   .\install.ps1 v2.2.0  # Install specific version
+
+param(
+    [string]$Version = "latest"
+)
 
 $ErrorActionPreference = "Stop"
 
-$REPO_RAW = "https://raw.githubusercontent.com/wilddeer/specops/main"
 $CURSOR_DIR = "$env:USERPROFILE\.cursor"
 $SKILLS_DIR = "$CURSOR_DIR\skills\specops"
 $AGENTS_DIR = "$CURSOR_DIR\agents\specops"
+
+# Fetch latest release version if not specified
+if ($Version -eq "latest") {
+    try {
+        $release = Invoke-RestMethod -Uri "https://api.github.com/repos/wilddeer/specops/releases/latest" -UseBasicParsing
+        $Version = $release.tag_name
+    } catch {
+        Write-Host "[specops] Failed to fetch latest release version from GitHub API: $_" -ForegroundColor Red
+        exit 1
+    }
+
+    if ([string]::IsNullOrEmpty($Version)) {
+        Write-Host "[specops] Failed to fetch latest release version from GitHub API" -ForegroundColor Red
+        exit 1
+    }
+}
+
+$REPO_RAW = "https://raw.githubusercontent.com/wilddeer/specops/$Version"
 
 function Write-Status($message) {
     Write-Host "[specops] $message" -ForegroundColor Cyan

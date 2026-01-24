@@ -1,13 +1,35 @@
 #!/bin/bash
 # specops installer for Cursor (macOS/Linux)
 # Installs skills and agents to ~/.cursor/
+# Usage: ./install.sh [version]
+#   ./install.sh         # Install latest release
+#   ./install.sh v2.2.0  # Install specific version
 
 set -e
 
-REPO_RAW="https://raw.githubusercontent.com/wilddeer/specops/main"
 CURSOR_DIR="$HOME/.cursor"
 SKILLS_DIR="$CURSOR_DIR/skills/specops"
 AGENTS_DIR="$CURSOR_DIR/agents/specops"
+VERSION="${1:-latest}"
+
+# Fetch latest release version if not specified
+if [ "$VERSION" = "latest" ]; then
+    if command -v curl &> /dev/null; then
+        VERSION=$(curl -fsSL https://api.github.com/repos/wilddeer/specops/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
+    elif command -v wget &> /dev/null; then
+        VERSION=$(wget -qO- https://api.github.com/repos/wilddeer/specops/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
+    else
+        echo "Error: Neither curl nor wget found. Please install one of them."
+        exit 1
+    fi
+
+    if [ -z "$VERSION" ]; then
+        echo "Error: Failed to fetch latest release version from GitHub API"
+        exit 1
+    fi
+fi
+
+REPO_RAW="https://raw.githubusercontent.com/wilddeer/specops/$VERSION"
 
 # Colors
 CYAN='\033[0;36m'
@@ -57,11 +79,13 @@ mkdir -p "$AGENTS_DIR"
 download() {
     local url="$1"
     local dest="$2"
-    
+
     if command -v curl &> /dev/null; then
         curl -fsSL "$url" -o "$dest"
+        return $?
     elif command -v wget &> /dev/null; then
         wget -q "$url" -O "$dest"
+        return $?
     else
         error "Neither curl nor wget found. Please install one of them."
         exit 1

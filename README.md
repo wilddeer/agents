@@ -32,16 +32,32 @@ Cursor exposes installed skills as commands, so you can use`/spec-driven-work` t
 
 ### Cursor
 
-**Windows (PowerShell):**
+**Quick install (latest release):**
 
+Windows (PowerShell):
 ```powershell
 irm https://raw.githubusercontent.com/wilddeer/specops/main/install.ps1 | iex
 ```
 
-**macOS/Linux:**
-
+macOS/Linux:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/wilddeer/specops/main/install.sh | bash
+```
+
+**Install specific version:**
+
+Download the script and run with version argument:
+
+Windows:
+```powershell
+curl -O https://raw.githubusercontent.com/wilddeer/specops/main/install.ps1
+.\install.ps1 v2.2.0
+```
+
+macOS/Linux:
+```bash
+curl -O https://raw.githubusercontent.com/wilddeer/specops/main/install.sh
+bash install.sh v2.2.0
 ```
 
 This installs skills and agents to `~/.cursor/skills/specops/` and `~/.cursor/agents/specops/`.
