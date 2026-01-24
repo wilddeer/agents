@@ -21,16 +21,17 @@ To find the current version:
 git describe --tags --abbrev=0
 ```
 
-### 2. Bump Version in Install Scripts
+### 2. Bump Version
 
-Update `VERSION` in both files:
+Update version in these files:
 - `install.ps1`: `$VERSION = "vX.Y.Z"`
 - `install.sh`: `VERSION="vX.Y.Z"`
+- `README.md`: Update install URLs to use `vX.Y.Z` instead of previous version
 
 ### 3. Commit Version Bump
 
 ```bash
-git add install.ps1 install.sh
+git add install.ps1 install.sh README.md
 git commit -m "Bump version to vX.Y.Z"
 ```
 
@@ -79,5 +80,6 @@ curl -fsSL https://raw.githubusercontent.com/wilddeer/specops/main/install.sh | 
 
 - [ ] Version follows semver
 - [ ] Both install scripts updated
-- [ ] Tag matches version in scripts
+- [ ] README install URLs updated
+- [ ] Tag matches version in scripts and README
 - [ ] Release notes summarize changes clearly
