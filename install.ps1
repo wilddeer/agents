@@ -14,7 +14,7 @@ if ($args.Count -gt 0) {
     $Version = "latest"
 }
 
-$CURSOR_DIR = "$env:USERPROFILE\.cursor"
+$CURSOR_DIR = "$HOME\.cursor"
 $SKILLS_DIR = "$CURSOR_DIR\skills\specops"
 $AGENTS_DIR = "$CURSOR_DIR\agents\specops"
 
@@ -108,7 +108,7 @@ foreach ($agent in $agents) {
         Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
         Write-Success "  Downloaded $agent"
     } catch {
-        Write-Error "  Failed to download $agent: $_"
+        Write-Error "  Failed to download ${agent}: $_"
         exit 1
     }
 }
