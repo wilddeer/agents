@@ -1,34 +1,13 @@
 #!/bin/bash
 # specops installer for Cursor (macOS/Linux)
 # Installs skills and agents to ~/.cursor/
-# Usage: ./install.sh [version]
-#   ./install.sh         # Install latest release
-#   ./install.sh v2.2.0  # Install specific version
 
 set -e
 
+VERSION="v2.2.0"
 CURSOR_DIR="$HOME/.cursor"
 SKILLS_DIR="$CURSOR_DIR/skills/specops"
-AGENTS_DIR="$CURSOR_DIR/agents/specops"
-VERSION="${1:-latest}"
-
-# Fetch latest release version if not specified
-if [ "$VERSION" = "latest" ]; then
-    if command -v curl &> /dev/null; then
-        VERSION=$(curl -fsSL https://api.github.com/repos/wilddeer/specops/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
-    elif command -v wget &> /dev/null; then
-        VERSION=$(wget -qO- https://api.github.com/repos/wilddeer/specops/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
-    else
-        echo "Error: Neither curl nor wget found. Please install one of them."
-        exit 1
-    fi
-
-    if [ -z "$VERSION" ]; then
-        echo "Error: Failed to fetch latest release version from GitHub API"
-        exit 1
-    fi
-fi
-
+AGENTS_DIR="$CURSOR_DIR/agents"
 REPO_RAW="https://raw.githubusercontent.com/wilddeer/specops/$VERSION"
 
 # Colors
@@ -64,16 +43,13 @@ if [ -d "$SKILLS_DIR" ]; then
     rm -rf "$SKILLS_DIR"
 fi
 
-if [ -d "$AGENTS_DIR" ]; then
-    status "Removing previous agents installation..."
-    rm -rf "$AGENTS_DIR"
-fi
+# Note: Not cleaning agents dir since it's shared with other plugins
 
 # Create directories
 status "Creating directories..."
 mkdir -p "$SKILLS_DIR/spec-driven-work"
 mkdir -p "$SKILLS_DIR/spec-step-execution"
-mkdir -p "$AGENTS_DIR"
+mkdir -p "$AGENTS_DIR"  # Creates if not exists, no-op otherwise
 
 # Download function
 download() {
@@ -129,6 +105,6 @@ echo -e "${WHITE}Installed to:${NC}"
 echo -e "${GRAY}  Skills: $SKILLS_DIR${NC}"
 echo -e "${GRAY}  Agents: $AGENTS_DIR${NC}"
 echo ""
-echo -e "${WHITE}To uninstall, remove these folders:${NC}"
+echo -e "${WHITE}To uninstall:${NC}"
 echo -e "${GRAY}  rm -rf '$SKILLS_DIR'${NC}"
-echo -e "${GRAY}  rm -rf '$AGENTS_DIR'${NC}"
+echo -e "${GRAY}  rm '$AGENTS_DIR/spec-step-executor.md'${NC}"

@@ -1,40 +1,13 @@
 # specops installer for Cursor (Windows)
 # Installs skills and agents to ~/.cursor/
-# Usage: .\install.ps1 [version]
-#   .\install.ps1         # Install latest release
-#   .\install.ps1 v2.2.0  # Install specific version
-# Note: When run via "irm ... | iex", always installs latest release
 
 $ErrorActionPreference = "Stop"
 
-# Get version from argument (only works when run as script file, not via iex)
-if ($args.Count -gt 0) {
-    $Version = $args[0]
-} else {
-    $Version = "latest"
-}
-
+$VERSION = "v2.2.0"
 $CURSOR_DIR = "$HOME\.cursor"
 $SKILLS_DIR = "$CURSOR_DIR\skills\specops"
-$AGENTS_DIR = "$CURSOR_DIR\agents\specops"
-
-# Fetch latest release version if not specified
-if ($Version -eq "latest") {
-    try {
-        $release = Invoke-RestMethod -Uri "https://api.github.com/repos/wilddeer/specops/releases/latest" -UseBasicParsing
-        $Version = $release.tag_name
-    } catch {
-        Write-Host "[specops] Failed to fetch latest release version from GitHub API: $_" -ForegroundColor Red
-        exit 1
-    }
-
-    if ([string]::IsNullOrEmpty($Version)) {
-        Write-Host "[specops] Failed to fetch latest release version from GitHub API" -ForegroundColor Red
-        exit 1
-    }
-}
-
-$REPO_RAW = "https://raw.githubusercontent.com/wilddeer/specops/$Version"
+$AGENTS_DIR = "$CURSOR_DIR\agents"
+$REPO_RAW = "https://raw.githubusercontent.com/wilddeer/specops/$VERSION"
 
 function Write-Status($message) {
     Write-Host "[specops] $message" -ForegroundColor Cyan
@@ -61,16 +34,15 @@ if (Test-Path $SKILLS_DIR) {
     Remove-Item -Recurse -Force $SKILLS_DIR
 }
 
-if (Test-Path $AGENTS_DIR) {
-    Write-Status "Removing previous agents installation..."
-    Remove-Item -Recurse -Force $AGENTS_DIR
-}
+# Note: Not cleaning agents dir since it's shared with other plugins
 
 # Create directories
 Write-Status "Creating directories..."
 New-Item -ItemType Directory -Force -Path "$SKILLS_DIR\spec-driven-work" | Out-Null
 New-Item -ItemType Directory -Force -Path "$SKILLS_DIR\spec-step-execution" | Out-Null
-New-Item -ItemType Directory -Force -Path $AGENTS_DIR | Out-Null
+if (-not (Test-Path $AGENTS_DIR)) {
+    New-Item -ItemType Directory -Force -Path $AGENTS_DIR | Out-Null
+}
 
 # Download skills
 Write-Status "Downloading skills..."
@@ -120,6 +92,6 @@ Write-Host "Installed to:" -ForegroundColor White
 Write-Host "  Skills: $SKILLS_DIR" -ForegroundColor Gray
 Write-Host "  Agents: $AGENTS_DIR" -ForegroundColor Gray
 Write-Host ""
-Write-Host "To uninstall, remove these folders:" -ForegroundColor White
+Write-Host "To uninstall:" -ForegroundColor White
 Write-Host "  Remove-Item -Recurse -Force '$SKILLS_DIR'" -ForegroundColor Gray
-Write-Host "  Remove-Item -Recurse -Force '$AGENTS_DIR'" -ForegroundColor Gray
+Write-Host "  Remove-Item '$AGENTS_DIR\spec-step-executor.md'" -ForegroundColor Gray
