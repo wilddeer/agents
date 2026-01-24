@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "specops",
-      "source": "./plugins/specops",
+      "source": "./",
       "description": "Work on projects through well-defined specs. Spec-first approach with no ambiguity."
     }
   ]

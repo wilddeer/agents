@@ -8,8 +8,6 @@ Claude Code skills and agents.
 
 Work on projects through well-defined specs. Spec-first approach with no ambiguity - every process gets specced, cross-referenced, and followed.
 
-**Location:** `plugins/specops/`
-
 **Command:** `/spec-driven-workflow`
 
 **Skill:** `specops:spec-driven-work`
