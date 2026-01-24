@@ -157,6 +157,44 @@ When creating or refining specs through discussion.
 ...
 ```
 
+### Execution Plan Requirement
+
+Every spec must include an execution plan section that defines how steps should be executed:
+
+```markdown
+## Execution Plan
+
+**Mode:** Direct / Subagents
+**Rationale:** [why this mode fits the work]
+
+### Sequential
+[Steps that must run in order]
+
+### Parallel (if mode is Subagents)
+[Steps/items that can run in parallel]
+**Max concurrent:** [number]
+```
+
+**When drafting a spec, propose an execution plan and ask user to confirm:**
+
+For Direct:
+> "For execution, I recommend Direct because [reason]. Does this work?"
+
+For Subagents (must include full strategy):
+> "For execution, I recommend Subagents because [reason].
+> - Sequential: Steps 1-2
+> - Parallel: Steps 3a-3z (the 50 competitor analyses)
+> - Max concurrent: 5
+> 
+> Does this work?"
+
+**Recommendation guidelines:**
+- Default recommendation: Direct (especially for coding)
+- Recommend Subagents only when: many similar items (5+), detailed unambiguous steps, items are independent
+- If unsure, recommend Direct - easier to control and handle gaps
+
+**The user decides.** Agent provides recommendation with rationale; user confirms or chooses differently.
+
 ### Questions to Ask
 
 When developing specs, actively ask:
@@ -344,9 +382,28 @@ When the spec defines verification criteria (testing, review, validation), track
 - Use "resolution applied, pending verification" after applying a fix
 - Update check results after issues are resolved and re-verified
 
-### Executing Steps Directly
+### Choosing Execution Mode
 
-When executing steps directly (not via subagent):
+Before starting execution, ask the user how to run the steps:
+
+> "Before executing, how should I run the steps?
+> - **Direct** (sequential, you review each step)
+> - **Subagents** (parallel where possible, faster)
+> 
+> My recommendation: [direct/subagents] because [reason]."
+
+**If the spec defines an execution plan** → follow it without asking.
+
+**Recommendation criteria:**
+
+| Recommend | When |
+|-----------|------|
+| **Direct** | Steps have room for interpretation, likely gaps, dependencies, or need user input. Most coding work falls here. |
+| **Subagents** | Many similar items (5+), spec has detailed implementation steps (no interpretation needed), items are independent. |
+
+### Direct Execution
+
+Execute steps sequentially in the main process. User can review each step.
 
 1. Invoke the `spec-step-execution` skill
 2. Execute the step following that skill
@@ -354,29 +411,25 @@ When executing steps directly (not via subagent):
 
 Re-invoking ensures this skill is fresh in context (not compacted) before continuing to next step.
 
-### Orchestration with Subagents
+### Subagent Execution
 
-Delegate step execution to `spec-step-executor` agents by default. The main process orchestrates; subagents execute.
-
-**When to execute directly (exceptions):**
-
-| Situation | Why |
-|-----------|-----|
-| Step requires user interaction mid-execution | Subagent can't interact with user |
-| High ambiguity / gaps likely | Main process handles gaps with user |
+Delegate step execution to `spec-step-executor` agents. Main process orchestrates; subagents execute.
 
 **Parallel execution:**
 
 The spec MUST explicitly define what can run in parallel:
 
 ```markdown
-## Execution Mode
+## Execution Plan
+
+**Mode:** Subagents
 
 ### Sequential
 Steps 1-3 must execute in order.
 
 ### Parallel
 Steps 4a, 4b, 4c can run in parallel (no shared state).
+Max concurrent: 3
 Wait for all before Step 5.
 ```
 
@@ -395,7 +448,6 @@ To launch parallel agents, use multiple Task tool calls in a single message:
 - Research file path (if exists)
 
 **Main process responsibilities:**
-- Decide subagent vs direct execution
 - Launch subagents (parallel when spec allows)
 - Update progress file with results (single writer)
 - Handle gap responses from subagents
