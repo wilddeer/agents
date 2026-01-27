@@ -30,7 +30,15 @@ Cursor exposes installed skills as commands, so you can use`/spec-driven-work` t
 
 ## Installation
 
-### Cursor
+### Universal (recommended)
+
+```bash
+npx skills add wilddeer/specops
+```
+
+See [skills.sh](https://skills.sh/) for details.
+
+### Cursor (manual install)
 
 Windows (PowerShell):
 ```powershell
