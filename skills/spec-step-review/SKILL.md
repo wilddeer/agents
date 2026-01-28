@@ -143,9 +143,36 @@ Changes: [uncommitted / git range]
 
 ### Assessment
 All spec requirements verified. Code is production-ready.
+```
 
-### Recommendations (optional)
-[Future improvements, not blockers]
+**APPROVED_WITH_RECOMMENDATIONS**
+
+Use when implementation is correct but you have suggestions or observations worth discussing (edge cases not covered by spec, potential improvements, patterns that could be documented).
+
+```
+Result: APPROVED_WITH_RECOMMENDATIONS
+Spec: [spec file path]
+Changes: [uncommitted / git range]
+
+### Checklist
+- [x] Project docs read (README, AGENTS.md)
+- [x] All spec requirements verified
+- [x] Project standards followed
+- [x] Architecture sound
+- [x] Code quality acceptable
+- [x] Third-party libs verified against exact versions
+- [x] Linter passes
+- [x] Tests pass
+- [x] No unintended side effects on code outside scope
+
+### Strengths
+[What's well done - be specific with file:line references]
+
+### Assessment
+All spec requirements verified. Code is production-ready.
+
+### Recommendations
+[Suggestions, observations, edge cases not in spec - each as a bullet point]
 ```
 
 **NEEDS_FIXES**
@@ -203,6 +230,6 @@ Recommendation: [what needs clarification in spec]
 - Be specific - always include file:line references
 - Categorize by actual severity - not everything is Critical
 - Acknowledge strengths - don't just list problems
-- Give clear verdict - APPROVED or NEEDS_FIXES, never ambiguous
+- Give clear verdict - APPROVED, APPROVED_WITH_RECOMMENDATIONS, or NEEDS_FIXES, never ambiguous
 - If spec is unclear on what to verify, return GAP
 - Don't nitpick style unless it violates project standards

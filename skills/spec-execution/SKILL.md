@@ -199,7 +199,7 @@ After all steps are executed:
 
 1. **Final review**: Spawn `spec-step-reviewer` with git range covering all spec changes
    - Pass: spec path, progress file path, git range (first spec commit..HEAD)
-   - Handle result same as per-step reviews (APPROVED/NEEDS_FIXES/GAP)
+   - Handle result same as per-step reviews (APPROVED/APPROVED_WITH_RECOMMENDATIONS/NEEDS_FIXES/GAP)
 2. **Run verification checklist** from the spec
 3. **Confirm with user**:
 
@@ -240,10 +240,11 @@ Execute steps sequentially in the main process. Each step goes through execute �
 2. **Review**: Spawn `spec-step-reviewer` agent to review uncommitted changes
    - Pass: spec path, progress file path
 3. **Handle review result:**
-   - APPROVED → Commit and continue (see below)
+   - APPROVED → Commit and continue
+   - APPROVED_WITH_RECOMMENDATIONS → Present recommendations to user, ask which (if any) to add to spec. If user selects any: pause, switch to `spec-development` to update spec, return. Then commit and continue.
    - NEEDS_FIXES → Fix issues, re-run reviewer
    - GAP → Switch to `spec-development` to fill gap
-4. **Commit** (only after APPROVED)
+4. **Commit** (only after APPROVED or APPROVED_WITH_RECOMMENDATIONS handled)
 5. **Update progress file**, then **re-invoke** `spec-execution` skill to restore orchestration context
 
 Re-invoking ensures this skill is fresh in context (not compacted) before continuing to next step.
@@ -304,10 +305,11 @@ To launch parallel agents, use multiple Task tool calls in a single message:
 1. **Spawn `spec-step-reviewer`** to review uncommitted changes:
    - Pass: spec path, progress file path
 2. **Handle review result:**
-   - APPROVED → Commit and continue (see below)
+   - APPROVED → Commit and continue
+   - APPROVED_WITH_RECOMMENDATIONS → Present recommendations to user, ask which (if any) to add to spec. If user selects any: pause, switch to `spec-development` to update spec, return. Then commit and continue.
    - NEEDS_FIXES → Fix issues, re-run reviewer
    - GAP → Switch to `spec-development` to fill gap
-3. **Commit** (only after APPROVED)
+3. **Commit** (only after APPROVED or APPROVED_WITH_RECOMMENDATIONS handled)
 4. **Update progress file**, proceed to next step
 
 ---
