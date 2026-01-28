@@ -52,12 +52,12 @@ See [skills.sh](https://skills.sh/) for details.
 
 Windows (PowerShell):
 ```powershell
-irm https://raw.githubusercontent.com/wilddeer/specops/v4.0.0/install.ps1 | iex
+irm https://raw.githubusercontent.com/wilddeer/specops/v4.1.0/install.ps1 | iex
 ```
 
 macOS/Linux:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wilddeer/specops/v4.0.0/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/wilddeer/specops/v4.1.0/install.sh | bash
 ```
 
 This installs skills to `~/.cursor/skills/specops/` and agents to `~/.cursor/agents/`.
